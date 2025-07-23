@@ -13,15 +13,18 @@ class Queue{
 
        void enqueue(int x){
             if (isFull()){cout<<"Cam not add"<<endl; return;}
-            else if(isEmpty()){front+=1;back+=1;}
+            else if(isEmpty()){front=0;back=0;}
             else{back+=1;}
             arr[back]=x;
         }
        int dequeue(){
-            int x{};
             if (isEmpty()){cout<<"Cannot not remove"<<endl; return -1;}
-            else if(front==back){x = arr[front]; arr[front] =0; front -=1; back -=1;}
-            else{x = arr[front]; arr[front] = 0 ; front+=1;}
+            int x{arr[front]};
+            arr[front]=0;
+            
+            if(front==back){front =-1;back =-1;}else{
+                front+=1;
+            }
             return x;
        }
        int count(){
