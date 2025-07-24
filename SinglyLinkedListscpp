@@ -1,0 +1,195 @@
+#include<iostream>
+using namespace std;
+
+class Node{
+    public:
+        int key;
+        int data;
+        Node* next;
+    public:
+        Node(){
+            key = 0 ;
+            data = 0 ;
+            next = nullptr;
+        }
+        Node(int k, int d){
+            key = k;
+            data = d;
+            next=nullptr;
+        }
+};
+
+class SinglyLinkedList{
+    public:
+        Node*head{};
+        SinglyLinkedList(Node* n){head = n;}
+
+        //Node Exists
+        Node* nodeExists(int k){
+            Node* temp{};
+            Node *ptr = head;
+            while(ptr!=nullptr){
+               if(ptr->key==k){
+                    temp = ptr;
+               } 
+               ptr = ptr->next;
+            }
+            return temp;  
+        }
+
+        //Appending to the List
+        void appendNode(Node* a){
+            if (nodeExists(a->key) !=nullptr){cout<<"Node already existing. Recheck!"<<endl; return;}
+            else if(head==nullptr){
+                head=a;
+            }else{
+                Node *ptr=head;
+                while(ptr->next!=nullptr){
+                    ptr= ptr->next;
+                }
+                ptr->next=a;
+                cout<<"Node appended"<<endl;
+            }
+        }
+
+        //Prepending to the List
+        void prependNode(Node* p){
+            if (nodeExists(p->key) !=nullptr){cout<<"Node already existing. Recheck!"<<endl; return;}
+            if(p==nullptr){cout<<"Cannot prepend a null node!"<<endl; return;}
+            p->next=head;
+            head=p;
+            cout<<"Node prepended!"<<endl;
+        }
+
+        //Display in Order
+        void display(){
+            if(head==nullptr){cout<<"No nodes in the singly linked list1"<<endl; return;}
+            Node *ptr{head};
+            cout<<"Singly linked list values: ";
+            while(ptr!=nullptr){
+                cout<<ptr->data<<" ";
+                ptr=ptr->next;
+            }
+        }
+
+        //Insert a node after a particular node in the list
+        void insertNodeAfter(Node* n, int key){
+
+            if(nodeExists(key)==nullptr || nodeExists(n->key)!=nullptr){cout<<"No node exists with such value"; return;}
+            n->next = nodeExists(key)->next;
+            nodeExists(key)->next=n;
+            cout<<"Node inserted"<<endl;
+        }
+
+        //Delete node by key
+        void deleteNodeByKey(int k){
+            if(head==nullptr){cout<<"Can not delete anything"<<endl; return;}
+    
+            if(head->key==k){
+                head=head->next;
+                cout<<"Node unlinked with keys value: "<<k<<endl;
+            }else{
+                Node*temp =nullptr;
+                Node*prevptr = head;
+                Node *currentptr = head ->next;
+                while(currentptr!=nullptr){
+                    if(currentptr->key == k ){
+                        temp=currentptr;
+                        currentptr=nullptr;
+                    }else{
+                        currentptr = currentptr ->next;
+                        prevptr = prevptr -> next;
+                    }                    
+                }
+                if(temp!=nullptr){
+                    prevptr->next=temp->next;
+                    cout<<"Node unliked with keys value: "<<k<<endl;
+                }else{
+                    cout<<"Node doesn't exist with key value: "<<k<<endl; 
+                }
+            }
+        }
+
+        //Update node 
+        void updateNodebyKey(int k, int d){
+            if(nodeExists(k)==nullptr){cout<<"No such node present"<<endl; return;}
+            nodeExists(k)->data =d;
+            cout<<"Node data updated successfully"<<endl;
+        }
+};
+
+int main() {
+    SinglyLinkedList s(nullptr);
+    int option{}, key{}, data{};
+
+    cout << boolalpha;
+    cout << "Your options:\n";
+    cout << "(1) Append Node\n(2) Prepend Node\n(3) Insert After Node\n(4) Delete Node by Key\n";
+    cout << "(5) Update Node by Key\n(6) Display List\n(7) Check if Node Exists\n(-1) Exit\n";
+
+    while (option != -1) {
+        cout << "\nEnter your option: ";
+        cin >> option;
+
+        switch (option) {
+            case 1: {
+                cout << "Enter key and data to append: ";
+                cin >> key >> data;
+                Node* newNode = new Node(key, data);
+                s.appendNode(newNode);
+                break;
+            }
+            case 2: {
+                cout << "Enter key and data to prepend: ";
+                cin >> key >> data;
+                Node* newNode = new Node(key, data);
+                s.prependNode(newNode);
+                break;
+            }
+            case 3: {
+                int afterKey;
+                cout << "Enter key and data of node to insert: ";
+                cin >> key >> data;
+                cout << "Enter key of node to insert after: ";
+                cin >> afterKey;
+                Node* newNode = new Node(key, data);
+                s.insertNodeAfter(newNode, afterKey);
+                break;
+            }
+            case 4: {
+                cout << "Enter key of node to delete: ";
+                cin >> key;
+                s.deleteNodeByKey(key);
+                break;
+            }
+            case 5: {
+                cout << "Enter key and new data to update: ";
+                cin >> key >> data;
+                s.updateNodebyKey(key, data);
+                break;
+            }
+            case 6:
+                s.display();
+                break;
+            case 7: {
+                cout << "Enter key to search: ";
+                cin >> key;
+                if (s.nodeExists(key))
+                    cout << "Node with key " << key << " exists." << endl;
+                else
+                    cout << "Node with key " << key << " does not exist." << endl;
+                break;
+            }
+            case -1:
+                cout << "Program exited." << endl;
+                break;
+            default:
+                cout << "Invalid option." << endl;
+                break;
+        }
+    }
+
+    return 0;
+}
+
+
