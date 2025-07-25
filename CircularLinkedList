@@ -1,0 +1,214 @@
+#include<iostream>
+using namespace std;
+
+class Node{
+    public:
+        int key;
+        int data;
+        Node* next;
+    public:
+        Node(){
+            key = 0 ;
+            data = 0 ;
+            next = nullptr;
+        }
+        Node(int k, int d){
+            key = k;
+            data = d;
+            next=nullptr;
+        }
+};
+
+class CircularLinkedList{
+    public:
+        Node*head{};
+        CircularLinkedList(){head=nullptr;}
+        CircularLinkedList(Node *n){head=n; n->next=head;}
+
+        //Node Exists
+        Node* nodeExists(int k){
+            Node* temp{};
+            Node *ptr = head;
+            do {
+                if(ptr->key==k){
+                    temp = ptr;
+                } 
+                ptr=ptr->next;
+            }while(ptr!=head);
+            return temp;  
+        }
+
+        //Appending the node
+        void appendNode(Node *n){
+            if(nodeExists(n->key) != nullptr){
+                cout << "Node pre-existing!" << endl;
+                return;
+            }
+            if(head == nullptr){
+                head = n;
+                n->next = head;
+                cout << "Node appended!" << endl;
+                return;
+            } else {
+                Node *ptr = head;
+                while(ptr->next != head){
+                    ptr = ptr->next;
+                }
+                ptr->next = n;
+                n->next = head;
+                cout << "Node appended" << endl;
+            }
+        }
+
+        //Prepending the node
+        void prependNode(Node *n){
+            if(nodeExists(n->key)!=nullptr){
+                cout<<"Node pre-existing"<<endl;
+                return ;
+            }
+            if(n==nullptr){cout<<"Cannot prepend a null node!"<<endl; return;}
+            n->next=head;
+            Node *ptr{head};
+            while(ptr->next!=head){
+                ptr=ptr->next;
+            }
+            ptr->next=n;
+            n->next=head;
+            head=n;
+            cout<<"Node prepended successfully!"<<endl;
+        }
+
+        //Inserting after a particular node
+        void insertNodeAfer(int key, Node *n){
+            Node *ptr{nodeExists(key)};
+            if(ptr==nullptr ||nodeExists(n->key)!=nullptr){cout<<"No node exists with such value"<<endl; return;}
+            else{
+                if(ptr->next==head){
+                    n->next=head;
+                    ptr->next=n;
+                }else{
+                    n->next=ptr->next;
+                    ptr->next=n;
+                    
+                }
+                cout<<"Node successfully inserted!"<<endl;
+            }
+        }
+
+        //Delete Node By Key
+        void deleteNodeByKey(int key){
+            if(head==nullptr || nodeExists(key)==nullptr){cout<<"Can not delete anything"<<endl; return;}
+            Node*ptr{nodeExists(key)};
+            if(ptr==head && ptr->next==head){
+                head=nullptr;
+                cout<<"Single node removed!"<<endl;
+                return;
+            }
+            Node *prev{head};
+            while(prev->next!=ptr){
+                prev=prev->next;
+            }
+            if(ptr==head){
+                head=head->next;
+            }
+            prev->next = ptr->next;
+            cout<<"Node deleted"<<endl;
+        }
+
+        //Display
+        void display(){
+            if(head==nullptr){cout<<"No nodes in doubly linked list!"<<endl; return;}
+            cout<<"Circular Linked list values: "<<endl;
+            Node*temp{head};
+            string output{""};
+            do{
+                output += "(" + to_string(temp->key) + "," + to_string(temp->data) + ") <--> ";
+                temp=temp->next;
+            }while(temp!=head);
+            cout<<output+"("+to_string(head->key)+","+to_string(head->data)+")"<<endl;
+        }
+
+        //Update Node
+        void updateNodebyKey(int k, int d){
+            if(nodeExists(k)==nullptr){cout<<"No such node present"<<endl; return;}
+            nodeExists(k)->data =d;
+            cout<<"Node data updated successfully"<<endl;
+        }
+
+
+};
+
+
+int main() {
+    CircularLinkedList s;
+    int option{}, key{}, data{};
+
+    cout << boolalpha;
+    cout << "Your options:\n";
+    cout << "(1) Append Node\n(2) Prepend Node\n(3) Insert After Node\n(4) Delete Node by Key\n";
+    cout << "(5) Update Node by Key\n(6) Display List\n(7) Check if Node Exists\n(-1) Exit\n";
+
+    while (option != -1) {
+        cout << "\nEnter your option: ";
+        cin >> option;
+
+        switch (option) {
+            case 1: {
+                cout << "Enter key and data to append: ";
+                cin >> key >> data;
+                Node* newNode = new Node(key, data);
+                s.appendNode(newNode);
+                break;
+            }
+            case 2: {
+                cout << "Enter key and data to prepend: ";
+                cin >> key >> data;
+                Node* newNode = new Node(key, data);
+                s.prependNode(newNode);
+                break;
+            }
+            case 3: {
+                int afterKey;
+                cout << "Enter key and data of node to insert: ";
+                cin >> key >> data;
+                cout << "Enter key of node to insert after: ";
+                cin >> afterKey;
+                Node* newNode = new Node(key, data);
+                s.insertNodeAfer(afterKey, newNode);
+                break;
+            }
+            case 4: {
+                cout << "Enter key of node to delete: ";
+                cin >> key;
+                s.deleteNodeByKey(key);
+                break;
+            }
+            case 5: {
+                cout << "Enter key and new data to update: ";
+                cin >> key >> data;
+                s.updateNodebyKey(key, data);
+                break;
+            }
+            case 6:
+                s.display();
+                break;
+            case 7: {
+                cout << "Enter key to search: ";
+                cin >> key;
+                if (s.nodeExists(key))
+                    cout << "Node with key " << key << " exists." << endl;
+                else
+                    cout << "Node with key " << key << " does not exist." << endl;
+                break;
+            }
+            case -1:
+                cout << "Program exited." << endl;
+                break;
+            default:
+                cout << "Invalid option." << endl;
+                break;
+        }
+    }
+
+    return 0;
+}
