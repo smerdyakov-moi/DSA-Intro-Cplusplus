@@ -1,0 +1,190 @@
+#include<iostream>
+using namespace std;
+
+class Node{
+    public:
+        int key{};
+        int data{};
+        Node*next{};
+        Node*prev{};
+        Node(){key = 0 ; data = 0 ; next=nullptr; prev=nullptr;}
+        Node (int k, int d ){key=k;data=d;next=nullptr;prev=nullptr;}
+
+};
+
+class DoublyLinkedList{
+    public:
+        Node*head{};
+        Node* nodeExists(int k){
+            Node* temp{};
+            Node *ptr = head;
+            while(ptr!=nullptr){
+               if(ptr->key==k){
+                    temp = ptr;
+               } 
+               ptr = ptr->next;
+            }
+            return temp;  
+        }
+        DoublyLinkedList(Node* n){
+            head=n;
+        }
+
+        //Append Node
+        void appendNode(Node * n){
+            if(nodeExists(n->key)!=nullptr){cout<<"Node already exists with key value "<<n->key<<endl; return;}
+            else if (head==nullptr){
+                head = n;
+            }else{
+                Node *ptr=head;
+                while(ptr->next!=nullptr){
+                    ptr=ptr->next;
+                }
+                ptr->next = n;
+                n->prev = ptr;
+                cout<<"Node appended successfully!"<<endl;
+            }
+        }
+
+        //Prepend Node
+        void prependNode(Node *n){
+            if(nodeExists(n->key)!=nullptr){cout<<"Node already exists with key value "<<n->key<<endl; return;}     
+            if(n==nullptr){cout<<"Cannot prepend a null node!"<<endl; return;}
+            head->prev=n;
+            n->next=head;
+            head=n;    
+        }
+
+        //Insert a node after a particular node in the list
+        void insertNodeAfter(Node *n, int key){
+            if(nodeExists(key)==nullptr || nodeExists(n->key)!=nullptr){cout<<"Incorrect!"; return;}
+            Node* ptr{nodeExists(key)};
+            if(nodeExists(key)->next==nullptr){
+                n->prev=ptr;
+                n->next=nullptr;
+            }else{
+                ptr->next->prev =n;
+                n->next = ptr->next;
+                ptr->next = n;
+                n->prev= ptr;
+            }
+            cout<<"Node inserted after "<<key<<" successfully"<<endl;
+        }
+
+        //Delete node by key
+        void deleteNodeByKey(int key){
+            if(head==nullptr || nodeExists(key)==nullptr){cout<<"Can not delete anything"<<endl; return;}
+            Node *ptr{nodeExists(key)};
+            if(head->key==key){
+                head=head->next;
+                cout<<"Node unlinked with keys value: "<<key<<endl;
+            }else{
+                Node *nextnode = ptr->next;
+                Node *prevnode = ptr->prev;
+                if(nextnode==nullptr){
+                    prevnode->next=nullptr;
+                    cout<<"Node deleted at the end successfully!"<<endl;
+                    return;
+                }else{
+                    prevnode->next=nextnode;
+                    nextnode->prev=prevnode;
+                    cout<<"Node deleted in between successfully!"<<endl;
+                }
+            }
+        }
+
+        //Update node
+        void updateNodebyKey(int k, int d){
+            if(nodeExists(k)==nullptr){cout<<"No such node present"<<endl; return;}
+            nodeExists(k)->data =d;
+            cout<<"Node data updated successfully"<<endl;
+        }
+
+        //Display nodes
+        void display(){
+            if(head==nullptr){cout<<"No nodes in doubly linked list!"<<endl; return;}
+            cout<<"Doubly Linked list values: "<<endl;
+            Node*temp{head};
+            string output{""};
+            while(temp!=nullptr){
+                output += "(" + to_string(temp->key) + "," + to_string(temp->data) + ") <--> ";
+                temp=temp->next;
+            }
+            cout<<output+" null "<<endl;
+        }
+};
+
+
+int main() {
+    DoublyLinkedList s(nullptr);
+    int option{}, key{}, data{};
+
+    cout << boolalpha;
+    cout << "Your options:\n";
+    cout << "(1) Append Node\n(2) Prepend Node\n(3) Insert After Node\n(4) Delete Node by Key\n";
+    cout << "(5) Update Node by Key\n(6) Display List\n(7) Check if Node Exists\n(-1) Exit\n";
+
+    while (option != -1) {
+        cout << "\nEnter your option: ";
+        cin >> option;
+
+        switch (option) {
+            case 1: {
+                cout << "Enter key and data to append: ";
+                cin >> key >> data;
+                Node* newNode = new Node(key, data);
+                s.appendNode(newNode);
+                break;
+            }
+            case 2: {
+                cout << "Enter key and data to prepend: ";
+                cin >> key >> data;
+                Node* newNode = new Node(key, data);
+                s.prependNode(newNode);
+                break;
+            }
+            case 3: {
+                int afterKey;
+                cout << "Enter key and data of node to insert: ";
+                cin >> key >> data;
+                cout << "Enter key of node to insert after: ";
+                cin >> afterKey;
+                Node* newNode = new Node(key, data);
+                s.insertNodeAfter(newNode, afterKey);
+                break;
+            }
+            case 4: {
+                cout << "Enter key of node to delete: ";
+                cin >> key;
+                s.deleteNodeByKey(key);
+                break;
+            }
+            case 5: {
+                cout << "Enter key and new data to update: ";
+                cin >> key >> data;
+                s.updateNodebyKey(key, data);
+                break;
+            }
+            case 6:
+                s.display();
+                break;
+            case 7: {
+                cout << "Enter key to search: ";
+                cin >> key;
+                if (s.nodeExists(key))
+                    cout << "Node with key " << key << " exists." << endl;
+                else
+                    cout << "Node with key " << key << " does not exist." << endl;
+                break;
+            }
+            case -1:
+                cout << "Program exited." << endl;
+                break;
+            default:
+                cout << "Invalid option." << endl;
+                break;
+        }
+    }
+
+    return 0;
+}
