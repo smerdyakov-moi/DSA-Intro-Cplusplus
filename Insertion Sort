@@ -1,0 +1,27 @@
+#include<iostream>
+#include<bits/stdc++.h>
+using namespace std;
+
+void insertionSort(int *arr){
+    int key{};
+    int j{};
+    for(int i{1}; i < 10;i++){
+        key=arr[i];
+        j=i-1;
+        while(j>=0 && key>arr[j]){
+            arr[j+1]=arr[j];
+            j-=1;
+        }
+        arr[j+1]=key;
+    }
+}
+
+int main(){
+
+    int arr[10]{67,19,20,15,45,100,99,86,3,7};
+    insertionSort(arr);
+    cout<<"Sorted (Descending) Array: ";
+    for(int i{};i<10;i++){
+        cout<<arr[i]<<" ";
+    }
+}
