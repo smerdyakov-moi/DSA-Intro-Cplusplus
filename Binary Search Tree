@@ -1,0 +1,89 @@
+#include<iostream>
+using namespace std;
+
+class  TreeNode{
+    public:
+        TreeNode *left; //Pointer to the left node
+        TreeNode *right; // Pointer to the right node
+        int data{}; // Acts as both the data and the key!
+
+        TreeNode(){ //Default constructor
+            data = 0 ;
+            left = nullptr;
+            right = nullptr;
+        }
+        TreeNode(int d){ // Parameterized constructor
+            data = d;
+            left=nullptr;
+            right=nullptr;
+        }
+};
+
+class BST{
+    public:
+        TreeNode *root{nullptr};
+
+        bool isTreeEmpty(){ return (root==nullptr)? true:false; }
+        void insertNode(TreeNode* t) {
+            if (root == nullptr) {
+                root = t;
+                cout << "Node inserted as root." << endl;
+                return;
+            }
+            TreeNode* temp = root;
+            while(temp!=nullptr){
+                if(temp->data==t->data){
+                    cout<<"No duplicates allowed!"<<endl;
+                    delete t;
+                    return;
+                }else if( t->data <temp->data){
+                    if(temp->left==nullptr){
+                        temp->left=t;
+                        cout<<"Node added to the left of "<<temp->data<<endl;
+                        return ;
+                    }else{
+                        temp=temp->left;
+                    }
+                }else{
+                    if(temp->right==nullptr){
+                        temp->right=t;
+                        cout<<"Node added to the right of "<<temp->data<<endl;
+                        return;
+                    }else{
+                        temp=temp->right;
+                    }
+                }
+            }
+        }
+        
+};
+
+int main(){
+    BST bst;
+    int option,value;
+    do{
+        cout<<"What operation do you want to perform ?"<<endl;
+        cout<<"1. Insert Node \n2. Search Node \n3. Delete Node \n4. Print BST values \n5.Exit Program\n>>";
+        cin>>option;
+        switch (option){
+            case 1:
+                cout<<"INSERT\n"<<endl;
+                cout<<"Enter value of tree node to insert in BST: ";
+                cin>>value;
+                TreeNode *new_node = new TreeNode(value); // Allocating memory on  the heap 
+                bst.insertNode(new_node);
+                break;
+            case 2:
+                cout<<"SEARCH\n"<<endl;
+                break;
+            case 3:
+                cout<<"DELETE\n"<<endl;
+                break;
+            case 4:
+                cout<<"DISPLAY\n"<<endl;
+                break;
+            case 5:
+                break;
+        }
+    }while(option!=5);
+}
