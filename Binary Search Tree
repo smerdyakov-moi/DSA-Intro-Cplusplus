@@ -1,5 +1,6 @@
 #include<iostream>
 using namespace std;
+#define globalSpace 5;
 
 class  TreeNode{
     public:
@@ -56,7 +57,7 @@ class BST{
             }
         }
         //Depth-first search traversal method
-        
+
         void printPreOrder(TreeNode *r){ //Node Display using Pre-Order Traversal(Part of Depth-first search = > N-L-R (Node->left->Right))
             if(r==nullptr){return ;}
             cout<<r->data<<" ";
@@ -75,14 +76,57 @@ class BST{
             printPostOrder(r->right);
             cout<<r->data<<" ";
         }
-};
+        
+        //Checking whether the value exists in the node or not
+        bool iterativeSearch(int value){
+            if(root==nullptr){cout<<"Hell"<<endl; return false;}
+            TreeNode*temp{root};
+            while(temp!=nullptr){   
+                if(temp->data==value){
+                    return true;
+                }else if(temp->data>value){
+                    temp=temp->left;
+                }else{
+                    temp=temp->right;
+                }
+            }
+            return (temp==nullptr)? false:true;
+        }
+
+        //Recursive method to find the height of the tree (Note: the height of a root node equals height of the tree, so a single root node would have 0 height)
+        int heightOfTree(TreeNode* r){
+            if(r==nullptr){return -1;}
+            else{
+                int lheight{heightOfTree(r->left)};
+                int rheight(heightOfTree(r->right));
+                return (lheight>rheight)? lheight+1:rheight+1;
+            }
+        }
+        
+        //BFS Traversal 
+        void printLevelOrderTraversal(TreeNode *r){
+            int h{heightOfTree(r)};
+            for(int i{} ; i <=h ; i++ ){
+                printGivenlevel(r,i);
+                cout<<"\n";
+            }
+        }
+        void printGivenlevel(TreeNode *r, int level){
+            if(r==nullptr){return;}
+            else if (level==0){cout<<r->data<<" ";}
+            else{
+                printGivenlevel(r->left,level-1);
+                printGivenlevel(r->right,level-1);
+            }
+        }
+};  
 
 int main(){
     BST bst;
     int option,value;
     do{
         cout<<"What operation do you want to perform ?"<<endl;
-        cout<<"1. Insert Node \n2. Search Node \n3. Delete Node \n4. Print BST values \n5.Exit Program\n>>";
+        cout<<"1. Insert Node \n2. Search Node \n3. Delete Node \n4. Print BST values \n5. Height of the tree \n6. BST Traversal \n7. Exit Program\n>>";
         cin>>option;
         switch (option){
             case 1:{
@@ -95,17 +139,32 @@ int main(){
             }
             case 2:
                 cout<<"SEARCH\n"<<endl;
+                int v;
+                cout<<"Enter the value you want to search in the node: ";
+                cin>>v;
+                if(bst.iterativeSearch(v)){
+                    cout<<"Value "<<v<<" exists!"<<endl;
+                }else{
+                    cout<<"Value "<<v<<" does not exist:/"<<endl;
+                }
                 break;
             case 3:
                 cout<<"DELETE\n"<<endl;
                 break;
             case 4:
                 cout<<"DISPLAY\n"<<endl;
-                bst.printPreOrder(bst.root); //bst.printPostOrder OR bst.printInOrder
+                bst.printPostOrder(bst.root); //bst.printPostOrder OR bst.printInOrder
                 cout<<"\n"<<endl;
                 break;
             case 5:
+                cout<<"Height of the tree: "<<bst.heightOfTree(bst.root)<<endl;
+                break;
+
+            case 6:
+                bst.printLevelOrderTraversal(bst.root);//
+                break;
+            case 7:
                 break;
         }
-    }while(option!=5);
+    }while(option!=7);
 }
