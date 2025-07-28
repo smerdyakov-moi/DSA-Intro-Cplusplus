@@ -23,15 +23,15 @@ class BST{
     public:
         TreeNode *root{nullptr};
 
-        bool isTreeEmpty(){ return (root==nullptr)? true:false; }
-        void insertNode(TreeNode* t) {
+        bool isTreeEmpty(){ return (root==nullptr)? true:false; } // Tree Empty?
+        void insertNode(TreeNode* t) { // Node Insertion in the binary tree
             if (root == nullptr) {
                 root = t;
                 cout << "Node inserted as root." << endl;
                 return;
             }
             TreeNode* temp = root;
-            while(temp!=nullptr){
+            while(true){
                 if(temp->data==t->data){
                     cout<<"No duplicates allowed!"<<endl;
                     delete t;
@@ -55,7 +55,26 @@ class BST{
                 }
             }
         }
+        //Depth-first search traversal method
         
+        void printPreOrder(TreeNode *r){ //Node Display using Pre-Order Traversal(Part of Depth-first search = > N-L-R (Node->left->Right))
+            if(r==nullptr){return ;}
+            cout<<r->data<<" ";
+            printPreOrder(r->left);
+            printPreOrder(r->right);
+        }
+        void printInOrder(TreeNode *r){ //Node Display using In-Order Traversal(Part of Depth-first search => L-N-R)
+            if(r==nullptr){return ;}
+            printInOrder(r->left);
+            cout<<r->data<<" ";
+            printInOrder(r->right);
+        }
+        void printPostOrder(TreeNode *r){ //Node Display using Post-Order Traversal(Part of Depth-first search => L-R-N)
+            if(r==nullptr){return ;}
+            printPostOrder(r->left);
+            printPostOrder(r->right);
+            cout<<r->data<<" ";
+        }
 };
 
 int main(){
@@ -66,13 +85,14 @@ int main(){
         cout<<"1. Insert Node \n2. Search Node \n3. Delete Node \n4. Print BST values \n5.Exit Program\n>>";
         cin>>option;
         switch (option){
-            case 1:
+            case 1:{
                 cout<<"INSERT\n"<<endl;
                 cout<<"Enter value of tree node to insert in BST: ";
                 cin>>value;
                 TreeNode *new_node = new TreeNode(value); // Allocating memory on  the heap 
                 bst.insertNode(new_node);
                 break;
+            }
             case 2:
                 cout<<"SEARCH\n"<<endl;
                 break;
@@ -81,6 +101,8 @@ int main(){
                 break;
             case 4:
                 cout<<"DISPLAY\n"<<endl;
+                bst.printPreOrder(bst.root); //bst.printPostOrder OR bst.printInOrder
+                cout<<"\n"<<endl;
                 break;
             case 5:
                 break;
